@@ -26,7 +26,7 @@
 #' 
 #' @export
 do_pcr <- function(template_copies, template_effs, 
-                   ncycles, inflection = ncycles/2, slope = 0.5, full = FALSE){
+                   ncycles, inflection = 18, slope = 0.5, full = FALSE){
   cycles   <- 0:ncycles
   cycle_efficiency <- 1/(1+exp(slope*(cycles - inflection)))
   # plot(cycles, cycle_efficiency)
