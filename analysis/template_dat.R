@@ -7,19 +7,24 @@ library(data.table)
 functions.f <- list.files("functions", full.names = TRUE)
 sapply(functions.f, source, echo = FALSE)
 
+# set evenness levels
 even.levs <- c('even', 'skew.lin', 'skew.low', 'skew.med', 'skew.hi')
 N_even <- length(even.levs)
 
+# set richness levels
 rich.levs <- c(10, 100, 1000)
 N_rich <- length(rich.levs)
 
+# number of samples (DNA extracts from the 'same' environment)
 reps.each <- 10
 reps.levs <- 1:reps.each
 
 N_comm <- length(even.levs) * length(rich.levs)
 
+# number of copies of template (essentially DNA template concentration)
 N_templates <- 1e5
 
+# set up sample data
 temp <- expand.grid(reps.levs, even.levs, rich.levs)
 colnames(temp) <- c('rep', 'even', 'rich')
 sample_dat <- data.table(
