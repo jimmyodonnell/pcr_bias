@@ -56,13 +56,16 @@ plot_pairlines <- function(data, id.col, ttt.col, val.col,
            col = mycols[i], pch = 21, bg = 'white', lwd = 3)
   }
 }
-pdf(file = "pair_line_plot.pdf", width = 6, height = 3)
+pdf(file = "../figures/pair_line_plot.pdf", width = 6, height = 3)
 par(oma = c(1,1,1,6))
 layout(mat = matrix(c(1:3), nrow = 1))
 plot_pairlines(dat, id.col = "subject", ttt.col = "level", val.col = "value", draw.axis.2 = TRUE)
 mtext("Templates", side = 2, line = 3)
+mtext("A", side = 1, line = 3)
 plot_pairlines(dat.skew, id.col = "subject", ttt.col = "level", val.col = "value")
+mtext("B", side = 1, line = 3)
 plot_pairlines(dat.zero, id.col = "subject", ttt.col = "level", val.col = "value", draw.axis.4 = TRUE)
+mtext("C", side = 1, line = 3)
 mtext("Amplicons", side = 4, line = 5)
 # text(par("usr")[2]*1.11, mean(par("usr")[3:4]), "AMPLICONS", srt = -90, xpd = TRUE, pos = 4)
 dev.off()
