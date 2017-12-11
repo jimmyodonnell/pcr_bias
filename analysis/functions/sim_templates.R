@@ -24,11 +24,11 @@
 #' probabilities of each event (which in this context are 'species').
 #' Note also that while the total length out is guaranteed to be = N_sp, there 
 #' is no guarantee that all elements will be greater than zero. 
-#' Aaaaand just ONE last thing... output is not sorted, so if the function is 
+#' Output is not sorted by default, so if the function is 
 #' repeated multiple times, the order of the elements (species) are not 
 #' guaranteed to coincide with their rank ordering.  
 #' 
-#' @examples sim_templates(4, 100, 'skew.lin', FALSE) # 25 25 25 25
+#' @examples sim_templates(4, 100, 'skew.lin', FALSE, sort = TRUE) # 25 25 25 25
 #' 
 #' @export
 sim_templates <- function(N_sp, N_out, evenness, stochastic, names = FALSE, sort){
