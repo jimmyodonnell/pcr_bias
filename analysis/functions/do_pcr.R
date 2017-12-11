@@ -26,7 +26,8 @@
 #' 
 #' @export
 do_pcr <- function(template_copies, template_effs, 
-                   ncycles, inflection = 18, slope = 0.5, full = FALSE){
+                   ncycles, inflection = 18, slope = 0.5, 
+                   stochastic = TRUE, full = FALSE){
   cycles   <- 0:ncycles
   cycle_efficiency <- 1/(1+exp(slope*(cycles - inflection)))
   # plot(cycles, cycle_efficiency)
@@ -43,11 +44,15 @@ do_pcr <- function(template_copies, template_effs,
     }
     cycle_prod <- sum(counts_prev * cycle_efficiency[i])
     cycle_prob <- (counts_prev * template_effs)/sum(counts_prev * template_effs)
-    # rmultinom chokes when n (size) > ~2.148e9
-    # new_copies <- rmultinom(n = 1, size = cycle_prod, prob = cycle_prob)
-    new_copies <- rpois(n = length(template_copies), 
-                        lambda = cycle_prob * cycle_prod)
-    product[i,] <- as.numeric(counts_prev) + as.numeric(new_copies)
+    if(stochastic){
+      # rmultinom chokes when n (size) > ~2.148e9
+      # new_copies <- rmultinom(n = 1, size = cycle_prod, prob = cycle_prob)
+      new_copies <- rpois(n = length(template_copies), 
+                          lambda = cycle_prob * cycle_prod)
+    }else{
+      new_copies <- round(cycle_prob * cycle_prod)
+    }
+    product[i,] <- as.numeric(counts_prev) + as.numeric(new_copies)      
   }
   if(full){
     return(product)
