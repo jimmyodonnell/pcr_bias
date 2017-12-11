@@ -78,7 +78,7 @@ sim_templates <- function(N_sp, N_out, evenness, stochastic, names = FALSE, sort
   if(stochastic){
     counts <- rmultinom(n = 1, size = N_out, prob = pY)[,1]
   }else{
-    counts <- pY * N_out
+    counts <- round(pY * N_out)
   }
   
   if(sort){
