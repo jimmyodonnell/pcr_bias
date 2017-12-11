@@ -1,4 +1,7 @@
+################################################################################
 # generate a bunch of 'purified dna' samples
+################################################################################
+
 library(data.table)
 
 functions.f <- list.files("functions", full.names = TRUE)
@@ -19,10 +22,14 @@ N_templates <- 1e5
 
 temp <- expand.grid(reps.levs, even.levs, rich.levs)
 colnames(temp) <- c('rep', 'even', 'rich')
-sample_dat <- data.table(sample = 1:nrow(temp), comm = rep(1:N_comm, each = reps.each), temp)
+sample_dat <- data.table(
+  sample = 1:nrow(temp), 
+  comm = rep(1:N_comm, each = reps.each), 
+  temp)
 rm(temp)
 
 # simulate template counts
+set.seed(2)
 template_dat <- sample_dat[ , 
   list(templates = sim_templates(N_sp = rich, N_out = N_templates, 
     evenness = even, stochastic = TRUE, sort = TRUE)), 
