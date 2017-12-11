@@ -7,13 +7,15 @@ library(vegan)
 # div.in <- samples.env[ , .(simp = diversity(templates, index = "simpson")), by = sample]
 div.in <- template_dat[ , .(
   simp.in = diversity(templates, index = "simpson"), 
-  shan.in = diversity(templates, index = "shannon")
+  shan.in = diversity(templates, index = "shannon"), 
+  rich.in = specnumber(templates)
   ), by = sample]
 
 ################################################################################
 div.out <- pcr_dat[ , .(
   simp.out = diversity(amplicons, index = "simpson"), 
-  shan.out = diversity(amplicons, index = "shannon")
+  shan.out = diversity(amplicons, index = "shannon"), 
+  rich.out = specnumber(amplicons)
   ), by = .(sample, rep.pcr)]
 
 div.in
