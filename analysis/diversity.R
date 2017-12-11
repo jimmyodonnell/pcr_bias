@@ -43,11 +43,16 @@ divplot <- function(mmv, metric){
   }
   maintext <- paste0('Mismatch Variation = ', mmv)
   par(mar = c(4, 7, 3, 1))
-  boxplot(div.full[,eval(divcol)] ~ div.full[,div.scen], 
-    # data = div.full, 
-    # ylim = range(c(div.full[,simp.diff], div.full[,simp.diff])), 
-    horizontal = TRUE, las = 1
-  )
+  boxbase <- function(...){
+  	boxplot(div.full[,eval(divcol)] ~ div.full[,div.scen], 
+      # data = div.full, 
+      # ylim = range(c(div.full[,simp.diff], div.full[,simp.diff])), 
+      horizontal = TRUE, las = 1, ...
+    )
+  }
+  boxbase()
+  abline(v = 0, col = hsv(1,0.5,1), lty = 2, lwd = 2)
+  boxbase(add = TRUE)
   title(main = maintext, xlab = XLAB)
   # points(div.full[, simp.in], col = 2, lwd = 2)
   
