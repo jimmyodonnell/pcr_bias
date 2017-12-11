@@ -61,3 +61,6 @@ divplot <- function(mmv, metric){
 }
 divplot(mmv = 'Low', metric = "simpson")
 
+# richness biplot
+plot(rich.out ~ rich.in, data = unique(div.full[,.(sample, rep.pcr, rich.in, rich.out)]))
+abline(a = 0, b = 1, col = hsv(1,0.5,1))
