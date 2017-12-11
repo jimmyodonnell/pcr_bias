@@ -56,7 +56,13 @@ plot_pairlines <- function(data, id.col, ttt.col, val.col,
            col = mycols[i], pch = 21, bg = 'white', lwd = 3)
   }
 }
-pdf(file = "../figures/pair_line_plot.pdf", width = 6, height = 3)
+FORMAT <- "pdf"
+if(FORMAT == "pdf"){
+  pdf(file = "../figures/pair_line_plot.pdf", width = 6, height = 3)
+}
+if(FORMAT == "png"){
+  png(file = "../figures/pair_line_plot.png", width = 6, height = 3, units = "in", pointsize = 12, res = 400)
+}
 par(oma = c(1,1,1,6))
 layout(mat = matrix(c(1:3), nrow = 1))
 plot_pairlines(dat, id.col = "subject", ttt.col = "level", val.col = "value", draw.axis.2 = TRUE)
