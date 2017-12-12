@@ -12,7 +12,7 @@ even.levs <- c('even', 'skew.lin', 'skew.low', 'skew.med', 'skew.hi')
 N_even <- length(even.levs)
 
 # set richness levels
-rich.levs <- c(10, 100, 1000)
+rich.levs <- c(100, 500, 1000, 5000, 10000)
 N_rich <- length(rich.levs)
 
 # number of samples (DNA extracts from the 'same' environment)
@@ -22,7 +22,7 @@ reps.levs <- 1:reps.each
 N_comm <- length(even.levs) * length(rich.levs)
 
 # number of copies of template (essentially DNA template concentration)
-N_templates <- 1e5
+N_templates <- 1e10
 
 # set up sample data
 temp <- expand.grid(reps.levs, even.levs, rich.levs)
