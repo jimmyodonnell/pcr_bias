@@ -33,6 +33,8 @@
 #' @export
 sim_templates <- function(N_sp, N_out, evenness, stochastic, names = FALSE, sort){
   
+  library(gtools)
+  
   even.opts <- c('even', 'skew.lin', 'skew.low', 'skew.med', 'skew.hi')
   
   if(!(evenness %in% even.opts)){
@@ -76,7 +78,10 @@ sim_templates <- function(N_sp, N_out, evenness, stochastic, names = FALSE, sort
   pY <- p(y)
 
   if(stochastic){
-    counts <- rmultinom(n = 1, size = N_out, prob = pY)[,1]
+    # counts <- rmultinom(n = 1, size = N_out, prob = pY)[,1] # breaks when size is large
+    # dirichlet alphas are funky when < 1.
+    alpha_multiplier <- 1/min(pY)
+    counts <- N_out * rdirichlet(n = 1, alpha = pY * alpha_multiplier)
   }else{
     counts <- round(pY * N_out)
   }
