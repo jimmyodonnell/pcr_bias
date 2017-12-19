@@ -43,7 +43,6 @@ for(v in 1:length(var_lev)){
 }
 
 pcr_dat <- rbindlist(pcr_dat)
-pcr_dat
 
 sim_sequencing <- TRUE
 if(sim_sequencing){
@@ -52,3 +51,4 @@ if(sim_sequencing){
 }else(
   pcr_dat[, seq.count := round(amplicons)]
 )
+pcr_dat
