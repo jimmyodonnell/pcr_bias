@@ -9,8 +9,8 @@ library(data.table)
 set.seed(1)
 template_dat[, eff := primer_eff(N = templates, mmv = 'custom', mmv.beta = c(9.5,0.5)), by = sample]
 
-pcr_reps <- 100
-set.seed(1) # pointless when stochastic = TRUE; remains just in case.
+pcr_reps <- 1 # pointless when stochastic = FALSE...
+set.seed(1) # pointless when stochastic = FALSE; remains just in case.
 temp <- list()
 for(i in 1:pcr_reps){
   temp[[i]] <- template_dat[,list(
