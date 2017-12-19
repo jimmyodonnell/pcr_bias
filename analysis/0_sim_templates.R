@@ -28,7 +28,7 @@ N_templates <- 1e10
 temp <- expand.grid(reps.levs, even.levs, rich.levs)
 colnames(temp) <- c('rep', 'even', 'rich')
 sample_dat <- data.table(
-  sample = 1:nrow(temp), 
+  templates.id = 1:nrow(temp), 
   comm = rep(1:N_comm, each = reps.each), 
   temp)
 rm(temp)
@@ -38,10 +38,10 @@ set.seed(2)
 template_dat <- sample_dat[ , 
   list(templates = sim_templates(N_sp = rich, N_out = N_templates, 
     evenness = even, stochastic = TRUE, sort = TRUE)), 
-  by = sample]
+  by = templates.id]
 
-template_dat[, species := seq_along(templates), by = sample]
+template_dat[, species := seq_along(templates), by = templates.id]
 
-template_dat <- merge(x = sample_dat, y = template_dat, by = 'sample')
+template_dat <- merge(x = sample_dat, y = template_dat, by = 'templates.id')
 
 template_dat
