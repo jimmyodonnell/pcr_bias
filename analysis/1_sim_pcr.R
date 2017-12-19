@@ -49,4 +49,6 @@ sim_sequencing <- TRUE
 if(sim_sequencing){
   seq_depth <- 2e5
   pcr_dat[, seq.count := sim_seq(depth = seq_depth, probs = amplicons), by = pcr.id]
-}
+}else(
+  pcr_dat[, seq.count := round(amplicons)]
+)
