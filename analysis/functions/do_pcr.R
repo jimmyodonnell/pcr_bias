@@ -5,7 +5,7 @@
 #' distribution. The number of additional molecules created at each step 
 #' ('size' parameter) is the product of the number of molecules available in 
 #' the previous cycle and the efficiency of the reaction at the current cycle. 
-#' The effeciency at each cycle is modeled as a logarithmic decay function of 
+#' The efficiency at each cycle is modeled as a logarithmic decay function of 
 #' the number of cycles, along with the cycle at which an inflection is reached 
 #' and the slope at that cycle. This approximates the loss of efficiency at 
 #' each cycle as reaction components are degraded, exhausted, or used up.
@@ -28,6 +28,7 @@
 do_pcr <- function(template_copies, template_effs, 
                    ncycles, inflection = 18, slope = 0.5, 
                    stochastic = TRUE, full = FALSE){
+  library(gtools)
   cycles   <- 0:ncycles
   cycle_efficiency <- 1/(1+exp(slope*(cycles - inflection)))
   # plot(cycles, cycle_efficiency)
@@ -47,8 +48,12 @@ do_pcr <- function(template_copies, template_effs,
     if(stochastic){
       # rmultinom chokes when n (size) > ~2.148e9
       # new_copies <- rmultinom(n = 1, size = cycle_prod, prob = cycle_prob)
-      new_copies <- rpois(n = length(template_copies), 
-                          lambda = cycle_prob * cycle_prod)
+      # new_copies <- rpois(n = length(template_copies), 
+                          # lambda = cycle_prob * cycle_prod)
+      # use dirichlet * cycle productivity instead
+      cycle_lambdas <- cycle_prob * (cycle_prob/min(cycle_prob))
+      new_copies <- round(cycle_prod * 
+        rdirichlet(n = 1, lambdas = cycle_lambdas)[1,])
     }else{
       new_copies <- round(cycle_prob * cycle_prod)
     }
