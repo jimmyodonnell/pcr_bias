@@ -16,7 +16,7 @@ rich.levs <- c(100, 500, 1000, 5000, 10000)
 N_rich <- length(rich.levs)
 
 # number of samples (DNA extracts from the 'same' environment)
-reps.each <- 10
+reps.each <- 24
 reps.levs <- 1:reps.each
 
 N_comm <- length(even.levs) * length(rich.levs)
