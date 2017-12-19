@@ -45,3 +45,9 @@ for(v in 1:length(var_lev)){
 
 pcr_dat <- rbindlist(pcr_dat)
 pcr_dat
+
+sim_sequencing <- TRUE
+if(sim_sequencing){
+  seq_depth <- 2e5
+  pcr_dat[, seq.count := sim_seq(depth = seq_depth, probs = amplicons), by = pcr.id]
+}
