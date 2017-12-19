@@ -1,0 +1,3 @@
+Scaled change in richness versus primer efficiency variance. 
+Color indicates richness level, while shapes indicate evenness levels. 
+See methods text for detailed data descriptions.
