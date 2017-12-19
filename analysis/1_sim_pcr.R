@@ -8,14 +8,13 @@
 library(data.table)
 
 eff_mean <- 0.95
-var_lev <- c(1, 10, 50, 100)
+var_lev <- c(1, 2, 5, 10)
 
 pcr_dat <- list()
 set.seed(1)
+len.outer <- length(var_lev)
+len.inner <- length(unique(template_dat$templates.id))
 for(v in 1:length(var_lev)){
-
-  len.outer <- length(var_lev)
-  len.inner <- length(unique(template_dat$templates.id))
 
   # variance for primer efficiencies
   SHAPE1 <- eff_mean * var_lev[v]
@@ -52,3 +51,20 @@ if(sim_sequencing){
   pcr_dat[, seq.count := round(amplicons)]
 )
 pcr_dat
+
+library(ggplot2)
+p <- ggplot(pcr_dat, aes(factor(mmv), eff.var)) + 
+  geom_violin(
+    adjust = 10, # kernel density bandwidth
+    scale = 'count', # 'width' or 'count' for width at widest point
+    draw_quantiles = c(0.25, 0.5, 0.75)
+    ) + 
+  xlab('Coefficient of beta parameters ("mmv")') +
+  ylab('Primer efficiency variance')
+p
+EXPORT <- FALSE
+if(EXPORT){
+  plot_name <- 'efficiency_v_betacoef_vio'
+  plot_file <- paste0('../figures/', plot_name, '.pdf')
+  ggsave(filename = plot_file, device = pdf)
+}
