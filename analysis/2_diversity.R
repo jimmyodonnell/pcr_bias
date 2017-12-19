@@ -9,24 +9,25 @@ div.in <- template_dat[ , .(
   simp.in = diversity(templates, index = "simpson"), 
   shan.in = diversity(templates, index = "shannon"), 
   rich.in = specnumber(templates)
-  ), by = sample]
+  ), by = templates.id]
 
 ################################################################################
 div.out <- pcr_dat[ , .(
-  simp.out = diversity(amplicons, index = "simpson"), 
-  shan.out = diversity(amplicons, index = "shannon"), 
-  rich.out = specnumber(amplicons)
-  ), by = .(sample, rep.pcr)]
+  simp.out = diversity(seq.count, index = "simpson"), 
+  shan.out = diversity(seq.count, index = "shannon"), 
+  rich.out = specnumber(seq.count)
+  ), by = .(templates.id, pcr.id, eff.var)]
 
 div.in
 div.out
 
-div.full <- merge(div.in, div.out, by = 'sample')
+div.full <- merge(div.in, div.out, by = 'templates.id')
 
 # calculate differences between input and output
 div.full[, simp.diff := simp.in - simp.out]
 div.full[, shan.diff := shan.in - shan.out]
-div.full <- merge(div.full, unique(template_dat[,.(sample, even, rich)]), by = 'sample')
+div.full[, rich.diff := rich.in - rich.out]
+div.full <- merge(div.full, unique(template_dat[,.(templates.id, even, rich)]), by = 'templates.id')
 
 div.full[ , div.scen := paste(even, rich, sep = '.')]
 
@@ -61,6 +62,13 @@ divplot <- function(mmv, metric){
 }
 divplot(mmv = 'Low', metric = "simpson")
 
-# richness biplot
-plot(rich.out ~ rich.in, data = unique(div.full[,.(sample, rep.pcr, rich.in, rich.out)]))
+# biplots
+# richness
+par(mar = c(4,4,1,1))
+plot(rich.out ~ rich.in, data = div.full)
 abline(a = 0, b = 1, col = hsv(1,0.5,1))
+
+# 
+par(mar = c(4,4,1,1))
+plot(div.full[,eff.var])
+plot(rich.diff/rich.in ~ eff.var, data = div.full, col = as.factor(div.full$rich))
