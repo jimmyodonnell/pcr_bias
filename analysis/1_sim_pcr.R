@@ -5,7 +5,7 @@
 library(data.table)
 
 # Primer efficiency will be modified, though original sample will not, 
-# so add primer efficiency now rather than generate fixed efficiences upfront
+# so add primer efficiency now rather than generate fixed efficiencies upfront
 set.seed(1)
 template_dat[, eff := primer_eff(N = templates, mmv = 'custom', mmv.beta = c(9.5,0.5)), by = sample]
 
