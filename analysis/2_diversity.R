@@ -24,9 +24,9 @@ div.out
 div.full <- merge(div.in, div.out, by = 'templates.id')
 
 # calculate differences between input and output
-div.full[, simp.diff := simp.in - simp.out]
-div.full[, shan.diff := shan.in - shan.out]
-div.full[, rich.diff := rich.in - rich.out]
+div.full[, simp.diff := simp.out - simp.in]
+div.full[, shan.diff := shan.out - shan.in]
+div.full[, rich.diff := rich.out - rich.in]
 div.full <- merge(div.full, unique(template_dat[,.(templates.id, even, rich)]), by = 'templates.id')
 
 div.full[ , div.scen := paste(even, rich, sep = '.')]
@@ -71,4 +71,52 @@ abline(a = 0, b = 1, col = hsv(1,0.5,1))
 # 
 par(mar = c(4,4,1,1))
 plot(div.full[,eff.var])
-plot(rich.diff/rich.in ~ eff.var, data = div.full, col = as.factor(div.full$rich))
+
+
+# set plot colors
+rich.levs <- levels(as.factor(div.full$rich))
+ncolors <- length(rich.levs)
+
+even.levs <- levels(as.factor(div.full[,even]))
+even.num  <- as.numeric(as.factor(div.full[,even]))
+
+library(RColorBrewer)
+mycolors <- brewer.pal(ncolors, 'Spectral')
+
+library(viridis)
+mycolors <- viridis(ncolors, end = 0.9, alpha = 0.6)
+mycolors.legend <- viridis(ncolors, end = 0.9)
+
+mycolors <- gghue(ncolors, alpha = 0.6)
+mycolors.legend <- gghue(ncolors)
+
+EXPORT <- FALSE
+plot_name <- "richness_by_efficiency"
+
+if(!exists("legend_text")){ legend_text <- list()}
+legend_text[plot_name] <- {
+"Scaled change in richness versus primer efficiency variance. 
+Color indicates richness level, while shapes indicate evenness levels. 
+See methods text for detailed data descriptions."
+}
+if(EXPORT){
+  pdf_file    <- paste0('../figures/', plot_name, ".pdf")
+  legend_file <- paste0('../figures/', plot_name, "_legend.txt")
+  writeLines(legend_text[[plot_name]], con = legend_file)
+  pdf(file = pdf_file, width = 8, height = 8)
+}
+par(mar = c(4,4,1,1))
+plot(rich.diff/rich.in ~ eff.var, data = div.full, 
+  col = mycolors[as.factor(div.full$rich)], 
+  pch = even.num, lwd = 1, 
+  xlab = "Variance in Primer Efficiency", 
+  ylab = expression(paste('Scaled ', Delta, Richness)), 
+  las = 1)
+legend('topright', title = 'Richness', legend = rich.levs, 
+  col = mycolors.legend, pch = 19, pt.lwd = 2, 
+  bty = 'n')
+legend('bottomright', title = "Evenness", legend = even.levs, 
+  pch = 1:length(even.levs), col = grey(0.5), bty = "n")
+if(EXPORT){
+  dev.off()
+}
