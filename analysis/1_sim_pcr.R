@@ -34,9 +34,8 @@ for(v in 1:length(var_lev)){
       mmv = var_lev[v], 
       eff.var = var(eff), 
       species, 
-      amplicons = do_pcr(template_copies = templates, 
-                         template_effs = eff, 
-                         ncycles = 30, inflection = 15, slope = 0.5, stochastic = FALSE)
+      amplicons = do_pcr(template_copies = templates, template_effs = eff, 
+        ncycles = 30, inflection = 15, slope = 0.5, stochastic = FALSE)
       ), by = templates.id]
   }
   pcr_dat[[v]] <- rbindlist(temp)
