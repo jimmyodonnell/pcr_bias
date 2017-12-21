@@ -19,9 +19,6 @@ for(v in 1:length(var_lev)){
   # variance for primer efficiencies
   SHAPE1 <- eff_mean * var_lev[v]
   SHAPE2 <- (1 - eff_mean) * var_lev[v]
-  template_dat[, eff := primer_eff(
-    N = templates, mmv = 'custom', mmv.beta = c(SHAPE1, SHAPE2)), 
-    by = templates.id]
 
   pcr_reps <- 1 # pointless when stochastic = FALSE...
   set.seed(1) # pointless when stochastic = FALSE; remains just in case.
@@ -31,11 +28,14 @@ for(v in 1:length(var_lev)){
       rep.pcr = i, 
       pcr.id = templates.id + len.inner*(v-1), 
       mmv = var_lev[v], 
-      eff.var = var(eff), 
       species, 
-      amplicons = do_pcr(template_copies = templates, template_effs = eff, 
-        ncycles = 30, inflection = 15, slope = 0.5, stochastic = FALSE)
-      ), by = templates.id]
+      templates, 
+      eff = primer_eff(
+        N = templates, mmv = 'custom', mmv.beta = c(SHAPE1, SHAPE2))
+      ), by = templates.id][,
+        amplicons := do_pcr(template_copies = templates, template_effs = eff, 
+          ncycles = 30, inflection = 15, slope = 0.5, stochastic = FALSE)
+      ]
   }
   pcr_dat[[v]] <- rbindlist(temp)
   rm(temp)
@@ -53,7 +53,10 @@ if(sim_sequencing){
 pcr_dat
 
 library(ggplot2)
-p <- ggplot(pcr_dat, aes(factor(mmv), eff.var)) + 
+p <- ggplot(
+  data = pcr_dat[,.(mmv, eff.var = var(eff)), by = pcr.id], 
+  aes(factor(mmv), eff.var)
+  ) + 
   geom_violin(
     adjust = 10, # kernel density bandwidth
     scale = 'count', # 'width' or 'count' for width at widest point
