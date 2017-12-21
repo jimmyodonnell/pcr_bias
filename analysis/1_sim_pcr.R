@@ -8,17 +8,17 @@
 library(data.table)
 
 eff_mean <- 0.95
-var_lev <- c(1, 2, 5, 10)
+beta_coefs <- c(1, 2, 5, 10)
 
 pcr_dat <- list()
 set.seed(1)
-len.outer <- length(var_lev)
+len.outer <- length(beta_coefs)
 len.inner <- length(unique(template_dat$templates.id))
-for(v in 1:length(var_lev)){
+for(v in 1:length(beta_coefs)){
 
   # variance for primer efficiencies
-  SHAPE1 <- eff_mean * var_lev[v]
-  SHAPE2 <- (1 - eff_mean) * var_lev[v]
+  SHAPE1 <- eff_mean * beta_coefs[v]
+  SHAPE2 <- (1 - eff_mean) * beta_coefs[v]
 
   pcr_reps <- 1 # pointless when stochastic = FALSE...
   set.seed(1) # pointless when stochastic = FALSE; remains just in case.
@@ -27,7 +27,7 @@ for(v in 1:length(var_lev)){
     temp[[i]] <- template_dat[,list(
       rep.pcr = i, 
       pcr.id = templates.id + len.inner*(v-1), 
-      mmv = var_lev[v], 
+      beta_coef = beta_coefs[v], 
       species, 
       templates, 
       eff = primer_eff(
@@ -54,15 +54,15 @@ pcr_dat
 
 library(ggplot2)
 p <- ggplot(
-  data = pcr_dat[,.(mmv, eff.var = var(eff)), by = pcr.id], 
-  aes(factor(mmv), eff.var)
+  data = pcr_dat[,.(beta_coef, eff.var = var(eff)), by = pcr.id], 
+  aes(factor(beta_coef), eff.var)
   ) + 
   geom_violin(
     adjust = 10, # kernel density bandwidth
     scale = 'count', # 'width' or 'count' for width at widest point
     draw_quantiles = c(0.25, 0.5, 0.75)
     ) + 
-  xlab('Coefficient of beta parameters ("mmv")') +
+  xlab('Coefficient of beta parameters') +
   ylab('Primer efficiency variance')
 p
 EXPORT <- FALSE
