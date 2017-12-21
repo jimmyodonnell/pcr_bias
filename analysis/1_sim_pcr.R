@@ -35,7 +35,7 @@ for(v in 1:length(var_lev)){
       ), by = templates.id][,
         amplicons := do_pcr(template_copies = templates, template_effs = eff, 
           ncycles = 30, inflection = 15, slope = 0.5, stochastic = FALSE)
-      ]
+      ][,templates := NULL]
   }
   pcr_dat[[v]] <- rbindlist(temp)
   rm(temp)
