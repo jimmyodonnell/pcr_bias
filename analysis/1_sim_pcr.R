@@ -67,5 +67,5 @@ if(EXPORT){
   plot_name <- 'efficiency_v_betacoef_vio'
   plot_file <- paste0('../figures/', plot_name, '.pdf')
   ggsave(filename = plot_file, device = pdf)
-  rm(p)
 }
+rm(p)
