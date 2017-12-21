@@ -3,35 +3,32 @@
 
 library(vegan)
 
+div.dat <- merge(
+  x = template_dat[,!'eff', with = FALSE], 
+  y = pcr_dat,
+  by = c('templates.id', 'species')
+)
 
-# div.in <- samples.env[ , .(simp = diversity(templates, index = "simpson")), by = sample]
-div.in <- template_dat[ , .(
+div.dat[ , seq.prop := seq.count/sum(seq.count), by = pcr.id ]
+div.dat[ , tem.prop := templates/sum(templates), by = pcr.id ]
+
+div.full <- div.dat[ , .(
+  dist.bc.raw = vegdist(
+    x = matrix(data = c(tem.prop, seq.prop), nrow = 2, byrow = TRUE), 
+    method = "bray", binary = FALSE), 
   simp.in = diversity(templates, index = "simpson"), 
   shan.in = diversity(templates, index = "shannon"), 
-  rich.in = specnumber(templates)
-  ), by = templates.id]
-
-div.out <- pcr_dat[ , .(
+  rich.in = specnumber(templates), 
   simp.out = diversity(seq.count, index = "simpson"), 
   shan.out = diversity(seq.count, index = "shannon"), 
-  rich.out = specnumber(seq.count),
-  dist.bc.raw = vegdist(x = matrix(
-    c(template_dat[templates.id, templates], seq.count), 
-      nrow = 2, byrow = TRUE), 
-    method = 'bray', binary = TRUE
-  )
-), by = .(templates.id, pcr.id, eff.var)]
-
-div.in
-div.out
-
-div.full <- merge(div.in, div.out, by = 'templates.id')
+  rich.out = specnumber(seq.count)  
+  ), by = c('pcr.id', 'templates.id', 'even', 'rich', 'eff.var')
+]
 
 ################################################################################
 # calculate differences between input and output
 div.full[, simp.diff := simp.out - simp.in]
 div.full[, shan.diff := shan.out - shan.in]
 div.full[, rich.diff := rich.out - rich.in]
-div.full <- merge(div.full, unique(template_dat[,.(templates.id, even, rich)]), by = 'templates.id')
 
 div.full[ , div.scen := paste(even, rich, sep = '.')]
