@@ -77,7 +77,7 @@ plot(rich.diff/rich.in ~ eff.var, data = div.full,
   col = mycolors[as.factor(div.full$rich)], 
   pch = even.num, lwd = 1, 
   xlab = "Variance in Primer Efficiency", 
-  ylab = expression(paste('Scaled ', Delta, 'richness')), 
+  ylab = expression(paste('Scaled ', Delta, ' richness')), 
   las = 1)
 legend('topright', title = 'Richness', legend = rich.levs, 
   col = mycolors.legend, pch = 19, pt.lwd = 2, 
