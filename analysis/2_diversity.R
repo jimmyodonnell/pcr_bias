@@ -3,16 +3,13 @@
 
 library(vegan)
 
-div.dat <- merge(
-  x = template_dat[,!'eff', with = FALSE], 
-  y = pcr_dat,
-  by = c('templates.id', 'species')
-)
+div.dat <- merge(template_dat, pcr_dat, by = c('templates.id', 'species'))
 
 div.dat[ , seq.prop := seq.count/sum(seq.count), by = pcr.id ]
 div.dat[ , tem.prop := templates/sum(templates), by = pcr.id ]
 
 div.full <- div.dat[ , .(
+  eff.var = var(eff), 
   dist.bc.raw = vegdist(
     x = matrix(data = c(tem.prop, seq.prop), nrow = 2, byrow = TRUE), 
     method = "bray", binary = FALSE), 
@@ -21,8 +18,8 @@ div.full <- div.dat[ , .(
   rich.in = specnumber(templates), 
   simp.out = diversity(seq.count, index = "simpson"), 
   shan.out = diversity(seq.count, index = "shannon"), 
-  rich.out = specnumber(seq.count)  
-  ), by = c('pcr.id', 'templates.id', 'even', 'rich', 'eff.var')
+  rich.out = specnumber(seq.count) 
+  ), by = c('pcr.id', 'templates.id', 'even', 'rich')
 ]
 
 ################################################################################
