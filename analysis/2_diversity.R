@@ -19,7 +19,7 @@ div.full <- div.dat[ , .(
   simp.out = diversity(seq.count, index = "simpson"), 
   shan.out = diversity(seq.count, index = "shannon"), 
   rich.out = specnumber(seq.count) 
-  ), by = c('pcr.id', 'templates.id', 'even', 'rich')
+  ), by = c('pcr.id', 'templates.id', 'even', 'rich', 'beta.coef')
 ]
 
 ################################################################################
