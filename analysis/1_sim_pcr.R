@@ -8,17 +8,17 @@
 library(data.table)
 
 eff_mean <- 0.95
-beta_coefs <- c(1, 2, 5, 10)
+beta.coefs <- c(1, 2, 5, 10)
 
 pcr_dat <- list()
 set.seed(1)
-len.outer <- length(beta_coefs)
+len.outer <- length(beta.coefs)
 len.inner <- length(unique(template_dat$templates.id))
-for(v in 1:length(beta_coefs)){
+for(v in 1:length(beta.coefs)){
 
   # variance for primer efficiencies
-  SHAPE1 <- eff_mean * beta_coefs[v]
-  SHAPE2 <- (1 - eff_mean) * beta_coefs[v]
+  SHAPE1 <- eff_mean * beta.coefs[v]
+  SHAPE2 <- (1 - eff_mean) * beta.coefs[v]
 
   pcr_reps <- 1 # pointless when stochastic = FALSE...
   set.seed(1) # pointless when stochastic = FALSE; remains just in case.
@@ -27,7 +27,7 @@ for(v in 1:length(beta_coefs)){
     temp[[i]] <- template_dat[,list(
       rep.pcr = i, 
       pcr.id = templates.id + len.inner*(v-1), 
-      beta_coef = beta_coefs[v], 
+      beta.coef = beta.coefs[v], 
       species, 
       templates, 
       eff = primer_eff(
@@ -54,8 +54,8 @@ pcr_dat
 
 library(ggplot2)
 p <- ggplot(
-  data = pcr_dat[,.(beta_coef, eff.var = var(eff)), by = pcr.id], 
-  aes(factor(beta_coef), eff.var)
+  data = pcr_dat[,.(beta.coef, eff.var = var(eff)), by = pcr.id], 
+  aes(factor(beta.coef), eff.var)
   ) + 
   geom_violin(
     adjust = 10, # kernel density bandwidth
